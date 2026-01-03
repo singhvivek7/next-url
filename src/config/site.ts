@@ -1,6 +1,7 @@
 export const siteConfig = {
     name: "NextLink",
     version: "v2.0",
+    url: "https://next-link-v2.vercel.app",
     description: "The infrastructure for modern links.",
     logo: "/logo/light.svg", // Fallback
     logos: {
