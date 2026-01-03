@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "next-url",
+      "name": "next-link",
       "dependencies": {
         "@hookform/resolvers": "^5.1.1",
         "@prisma/client": "^6.9.0",
