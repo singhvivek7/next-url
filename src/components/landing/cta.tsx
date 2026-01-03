@@ -8,21 +8,21 @@ import { siteConfig } from "@/config/site";
 
 export const CTA = () => {
     return (
-        <section className="py-32 bg-[#050505]">
+        <section className="py-32 bg-background">
             <div className="max-w-[1400px] mx-auto px-6 text-center">
                 <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                 >
-                    <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-white mb-8">
+                    <h2 className="text-4xl md:text-6xl font-bold tracking-tighter text-foreground mb-8">
                         {siteConfig.cta.title}
                     </h2>
-                    <p className="text-xl text-white/50 mb-10">
+                    <p className="text-xl text-muted-foreground mb-10">
                         {siteConfig.cta.description}
                     </p>
                     <div className="flex items-center justify-center gap-4">
-                        <Button variant="landing-primary" size="xl" className="font-semibold text-sm">
+                        <Button variant="default" size="xl" className="font-semibold text-sm">
                             {siteConfig.cta.primaryButton}
                         </Button>
                         <Button variant="landing-ghost" size="xl" className="font-medium text-sm gap-2">

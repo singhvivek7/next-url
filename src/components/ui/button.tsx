@@ -12,7 +12,7 @@ const buttonVariants = cva(
         default:
           "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
           "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
         secondary:
@@ -20,9 +20,9 @@ const buttonVariants = cva(
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
-        "landing-primary": "bg-white text-black hover:bg-white/90 shadow-[0_0_20px_rgba(255,255,255,0.1)] border border-transparent",
-        "landing-outline": "border border-white/20 text-white bg-transparent hover:bg-white hover:text-black transition-colors",
-        "landing-ghost": "text-white/70 hover:text-white bg-transparent hover:bg-white/5 transition-colors",
+        "landing-primary": "bg-foreground text-background hover:bg-foreground/90 shadow-[0_0_20px_rgba(255,255,255,0.1)] border border-transparent",
+        "landing-outline": "border border-border text-foreground bg-transparent hover:bg-foreground hover:text-background transition-colors",
+        "landing-ghost": "text-muted-foreground hover:text-foreground bg-transparent hover:bg-muted transition-colors",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

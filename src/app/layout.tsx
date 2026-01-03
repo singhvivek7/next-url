@@ -17,9 +17,10 @@ export default ({
       <body
         className={`${fontPrimary.className} ${fontPrimary.variable} ${fontSecondary.variable} antialiased scroll-smooth`}
       >
-        <ConfigStyleProvider />
-        {children}
-        <Toaster position="bottom-right" richColors theme="light" />
+        <ConfigStyleProvider>
+          {children}
+          <Toaster position="bottom-right" richColors />
+        </ConfigStyleProvider>
       </body>
     </html>
   );

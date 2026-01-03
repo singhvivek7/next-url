@@ -10,7 +10,7 @@ import { RotatingText } from "./rotating-text";
 
 export const Hero = () => {
     return (
-        <section className="relative pt-32 pb-20 px-6 md:pt-48 md:pb-32 border-b border-white/[0.08] bg-[#050505]">
+        <section className="relative pt-32 pb-20 px-6 md:pt-48 md:pb-32 border-b border-border bg-background">
             <div className="max-w-[1400px] mx-auto relative z-10">
                 <div className="flex flex-col items-center text-center">
 
@@ -19,10 +19,10 @@ export const Hero = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5 }}
-                        className="flex items-center gap-2 px-3 py-1 border border-white/[0.08] bg-white/[0.02] mb-8"
+                        className="flex items-center gap-2 px-3 py-1 border border-border bg-muted mb-8"
                     >
-                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                        <span className="text-[11px] font-mono font-medium text-white/70 uppercase tracking-wider">
+                        <div className="w-1.5 h-1.5 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.5)]" />
+                        <span className="text-[11px] font-mono font-medium text-muted-foreground uppercase tracking-wider">
                             {siteConfig.hero.badge}
                         </span>
                     </motion.div>
@@ -32,13 +32,13 @@ export const Hero = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.1 }}
-                        className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white mb-8"
+                        className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-foreground mb-8"
                     >
                         {siteConfig.hero.titlePrefix}
                         <br />
                         <RotatingText
                             words={siteConfig.hero.rotatingWords}
-                            className="text-white/40"
+                            className="text-primary"
                         />
                     </motion.h1>
 
@@ -46,7 +46,7 @@ export const Hero = () => {
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.2 }}
-                        className="text-lg md:text-xl text-white/50 max-w-2xl mb-12 font-light leading-relaxed whitespace-pre-line"
+                        className="text-lg md:text-xl text-muted-foreground max-w-2xl mb-12 font-light leading-relaxed whitespace-pre-line"
                     >
                         {siteConfig.hero.description}
                     </motion.p>
@@ -65,16 +65,16 @@ export const Hero = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 0.6, delay: 0.5 }}
-                        className="mt-24 pt-8 border-t border-white/[0.08] w-full max-w-3xl"
+                        className="mt-24 pt-8 border-t border-border w-full max-w-3xl"
                     >
-                        <p className="text-[10px] text-white/30 uppercase tracking-widest font-mono mb-6">
+                        <p className="text-[10px] text-muted-foreground/60 uppercase tracking-widest font-mono mb-6">
                             Powering links for
                         </p>
                         <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
                             {siteConfig.hero.trustedBy.map((company) => (
                                 <span
                                     key={company}
-                                    className="text-sm font-semibold text-white/40 hover:text-white transition-colors cursor-default tracking-wide"
+                                    className="text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors cursor-default tracking-wide"
                                 >
                                     {company}
                                 </span>
@@ -85,7 +85,7 @@ export const Hero = () => {
             </div>
 
             {/* Technical Grid Background (Overlay) */}
-            <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)] pointer-events-none" />
+            <div className="absolute inset-0 bg-[linear-gradient(hsl(var(--primary)/0.02)_1px,transparent_1px),linear-gradient(90deg,hsl(var(--primary)/0.02)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black,transparent)] pointer-events-none" />
         </section>
     );
 };

@@ -12,12 +12,14 @@ import { FAQ } from "@/components/landing/faq";
 import { CTA } from "@/components/landing/cta";
 import { Footer } from "@/components/landing/footer";
 import { GridBackground } from "@/components/landing/background";
+import { useThemeColor } from "@/components/config-style-provider";
 
 const NextURLLanding = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const smoothX = useSpring(mouseX, { damping: 50, stiffness: 400 });
   const smoothY = useSpring(mouseY, { damping: 50, stiffness: 400 });
+  const { mode } = useThemeColor();
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -29,20 +31,22 @@ const NextURLLanding = () => {
   }, [mouseX, mouseY]);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-foreground overflow-x-hidden selection:bg-white/20 selection:text-white">
+    <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
       <GridBackground />
       <Navbar />
 
       {/* Cursor Glow Effect */}
       <motion.div
-        className="fixed w-[600px] h-[600px] rounded-full pointer-events-none z-0 opacity-15 mix-blend-screen"
+        className="fixed w-[600px] h-[600px] rounded-full pointer-events-none z-0"
         style={{
           x: smoothX,
           y: smoothY,
           translateX: "-50%",
           translateY: "-50%",
+          opacity: 0.10,
+          mixBlendMode: mode === "dark" ? "screen" : "multiply",
           background:
-            "radial-gradient(circle, rgba(99, 102, 241, 0.15), transparent 70%)",
+            "radial-gradient(circle, var(--primary), transparent 70%)",
         }}
       />
 

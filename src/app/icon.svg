@@ -1,0 +1,31 @@
+<svg width="420" height="120" viewBox="0 0 420 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="nextlinkGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#2563EB"/>
+      <stop offset="100%" stop-color="#22D3EE"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Icon -->
+  <g transform="translate(24,32)" fill="url(#nextlinkGradient)">
+    <!-- Left link -->
+    <rect x="0" y="16" width="28" height="10" rx="5"/>
+    <circle cx="0" cy="21" r="7"/>
+
+    <!-- Short gap -->
+    <rect x="36" y="20" width="10" height="2" rx="1"/>
+
+    <!-- Arrow (redirect) -->
+    <polygon points="52,10 80,21 52,32" />
+  </g>
+
+  <!-- Text -->
+  <text x="140" y="75"
+        font-family="Inter, Segoe UI, Arial, sans-serif"
+        font-size="48"
+        font-weight="600"
+        fill="#0F172A">
+    Next
+    <tspan fill="url(#nextlinkGradient)">Link</tspan>
+  </text>
+</svg>

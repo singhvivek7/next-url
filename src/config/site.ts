@@ -2,6 +2,11 @@ export const siteConfig = {
     name: "NextLink",
     version: "v2.0",
     description: "The infrastructure for modern links.",
+    logo: "/logo/light.svg", // Fallback
+    logos: {
+        light: "/logo/dark.svg",
+        dark: "/logo/light.svg",
+    },
     nav: [
         { name: "Product", href: "#product" },
         { name: "Solutions", href: "#solutions" },

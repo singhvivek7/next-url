@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { handleShortUrl } from "@/actions/short-url";
 
 interface HistoryItem {
@@ -107,17 +108,18 @@ export const UrlShortener = () => {
     return (
         <div className="w-full">
             {/* Main Input Block - Sharp, Industrial, No-Round */}
-            <div className="flex items-stretch border border-white/[0.15] bg-[#050505] hover:border-white/[0.3] transition-colors">
-                <div className="flex items-center justify-center px-5 border-r border-white/[0.15] text-white/40">
+            {/* Main Input Block - Sharp, Industrial, No-Round */}
+            <div className="flex flex-col sm:flex-row items-stretch border border-border bg-card hover:border-ring transition-colors rounded-none overflow-hidden sm:overflow-visible">
+                <div className="flex items-center justify-center px-5 py-4 sm:py-0 border-b sm:border-b-0 sm:border-r border-border text-muted-foreground bg-muted sm:bg-transparent">
                     <LinkIcon className="w-5 h-5" />
                 </div>
-                <input
+                <Input
                     type="text"
                     value={currentUrl}
                     onChange={(e) => setCurrentUrl(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleShortenUrl()}
                     placeholder="paste.link/here"
-                    className="flex-1 bg-transparent border-none outline-none text-white text-lg placeholder:text-white/20 font-medium px-4 h-16 rounded-none focus:bg-white/[0.02] transition-colors"
+                    className="flex-1 bg-transparent border-none text-foreground text-base sm:text-lg placeholder:text-muted-foreground/50 font-medium px-4 h-16 rounded-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:bg-muted transition-colors min-h-16 sm:min-h-auto"
                     autoComplete="off"
                     autoCorrect="off"
                     spellCheck="false"
@@ -126,7 +128,7 @@ export const UrlShortener = () => {
                     onClick={handleShortenUrl}
                     disabled={isShortening}
                     variant="default"
-                    className="h-auto rounded-none px-8 font-semibold bg-white text-black hover:bg-white/90 border-l border-white/[0.15] min-w-[120px]"
+                    className="h-16 sm:h-auto rounded-none px-8 font-semibold bg-primary text-primary-foreground hover:bg-primary/90 border-t sm:border-t-0 sm:border-l border-border min-w-[120px] w-full sm:w-auto"
                 >
                     {isShortening ? "Processing..." : "Shorten"}
                 </Button>
@@ -141,15 +143,15 @@ export const UrlShortener = () => {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: "auto" }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="bg-[#050505] border border-white/[0.15] p-6 flex items-center justify-between"
+                            className="bg-card border border-border p-6 flex items-center justify-between"
                         >
                             <div className="flex items-center gap-4 overflow-hidden">
-                                <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                                <div className="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.5)]" />
                                 <a
                                     href={shortenedUrl}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className="font-mono text-emerald-400 hover:underline truncate text-lg"
+                                    className="font-mono text-primary hover:underline hover:text-primary/90 truncate text-lg"
                                 >
                                     {shortenedUrl}
                                 </a>
@@ -157,7 +159,7 @@ export const UrlShortener = () => {
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => copyToClipboard(shortenedUrl)}
-                                    className="p-2 border border-white/10 hover:bg-white/5 text-white/70 hover:text-white transition-colors"
+                                    className="p-2 border border-border hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     <Copy className="w-4 h-4" />
                                 </button>
@@ -168,25 +170,33 @@ export const UrlShortener = () => {
 
                 {/* History List */}
                 {history.length > 0 && (
-                    <div className="border border-white/[0.08] divide-y divide-white/[0.08]">
-                        <div className="bg-white/[0.02] px-4 py-2 text-[10px] uppercase tracking-widest text-white/40 font-mono">
+                    <div className="border border-border divide-y divide-border">
+                        <div className="bg-muted px-4 py-2 text-[10px] uppercase tracking-widest text-muted-foreground font-mono">
                             Recent Activity
                         </div>
                         {history.map((item) => (
                             <div
                                 key={item.id}
-                                className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-[#050505] hover:bg-white/[0.02] transition-colors"
+                                className="group flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-card hover:bg-muted transition-colors"
                             >
                                 {/* Redirect URL - Left */}
                                 <div className="sm:w-[30%] min-w-0">
-                                    <div className="font-mono text-sm text-white/90 truncate cursor-pointer hover:text-white transition-colors" onClick={() => copyToClipboard(item.shortUrl)}>
-                                        {item.shortUrl.replace(/^https?:\/\//, "")}
+                                    <div
+                                        className="font-mono text-sm truncate cursor-pointer transition-colors group/link"
+                                        onClick={() => copyToClipboard(item.shortUrl)}
+                                    >
+                                        <span className="text-muted-foreground group-hover/link:text-foreground/80 transition-colors">
+                                            {item.shortUrl.replace(/^https?:\/\//, "").substring(0, item.shortUrl.replace(/^https?:\/\//, "").lastIndexOf("/") + 1)}
+                                        </span>
+                                        <span className="text-primary/80 font-semibold group-hover/link:text-primary transition-colors">
+                                            {item.shortUrl.substring(item.shortUrl.lastIndexOf("/") + 1)}
+                                        </span>
                                     </div>
                                 </div>
 
                                 {/* Original URL - Center */}
                                 <div className="sm:flex-1 w-full min-w-0 sm:text-center">
-                                    <div className="text-xs text-white/30 truncate" title={item.originalUrl}>
+                                    <div className="text-xs text-muted-foreground truncate" title={item.originalUrl}>
                                         {item.originalUrl}
                                     </div>
                                 </div>
@@ -195,14 +205,14 @@ export const UrlShortener = () => {
                                 <div className="flex items-center justify-end gap-2 sm:w-[20%] opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
                                     <button
                                         onClick={() => copyToClipboard(item.shortUrl)}
-                                        className="cursor-pointer p-2 border border-white/5 hover:border-white/20 text-white/30 hover:text-white transition-colors"
+                                        className="cursor-pointer p-2 border border-border hover:border-foreground/20 text-muted-foreground hover:text-foreground transition-colors"
                                         title="Copy Link"
                                     >
                                         <Copy className="w-3.5 h-3.5" />
                                     </button>
                                     <button
                                         onClick={(e) => deleteFromHistory(item.id, e)}
-                                        className="cursor-pointer p-2 border border-white/5 hover:border-red-500/30 text-white/30 hover:text-red-400 transition-colors"
+                                        className="cursor-pointer p-2 border border-border hover:border-red-500/30 text-muted-foreground hover:text-destructive transition-colors"
                                         title="Delete"
                                     >
                                         <Trash2 className="w-3.5 h-3.5" />

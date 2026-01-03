@@ -78,8 +78,8 @@ export function DashboardSidebar({ isOpen, onClose }: SidebarProps) {
             "flex items-center justify-between rounded-lg px-3 py-2 text-sm font-medium transition-colors",
             level > 0 && "ml-4",
             isActive
-              ? "bg-gray-100 text-gray-900"
-              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+              ? "bg-muted text-foreground font-semibold"
+              : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
           )}
         >
           <Link
@@ -122,11 +122,13 @@ export function DashboardSidebar({ isOpen, onClose }: SidebarProps) {
     <>
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white border-r border-gray-200 px-6 pb-4">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-background border-r border-border px-6 pb-4">
           <div className="flex h-16 shrink-0 items-center">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600"></div>
-              <span className="text-xl font-bold text-gray-900">Dashboard</span>
+              <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center">
+                <Link2 className="text-primary w-5 h-5" />
+              </div>
+              <span className="text-xl font-bold text-foreground">Dashboard</span>
             </div>
           </div>
           <nav className="flex flex-1 flex-col">
@@ -144,11 +146,13 @@ export function DashboardSidebar({ isOpen, onClose }: SidebarProps) {
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white border-r border-gray-200 px-6 pb-4">
+        <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-background border-r border-border px-6 pb-4">
           <div className="flex h-16 shrink-0 items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600"></div>
-              <span className="text-xl font-bold text-gray-900">Dashboard</span>
+              <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center">
+                <Link2 className="text-primary w-5 h-5" />
+              </div>
+              <span className="text-xl font-bold text-foreground">Dashboard</span>
             </div>
             <Button
               variant="ghost"
