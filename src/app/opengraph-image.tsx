@@ -1,6 +1,7 @@
+import { ImageResponse } from 'next/og'
+
 import { defaultPalette } from '@/config/color-palettes'
 import { siteConfig } from '@/config/site'
-import { ImageResponse } from 'next/og'
 
 export const runtime = 'edge'
 

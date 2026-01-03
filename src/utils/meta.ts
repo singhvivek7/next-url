@@ -1,5 +1,6 @@
-import { siteConfig } from "@/config/site";
 import { Metadata } from "next";
+
+import { siteConfig } from "@/config/site";
 
 type Page = "homepage" | "about" | "contact" | "privacy" | "terms";
 
