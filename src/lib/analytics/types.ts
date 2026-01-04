@@ -9,6 +9,7 @@ export interface TrackClickPayload {
     ip?: string;
     userAgent?: string;
     referer?: string;
+    language?: string;
     country?: string;
     city?: string;
     device?: string;
