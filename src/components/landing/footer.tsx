@@ -14,17 +14,37 @@ export const Footer = () => {
                 </div>
 
                 {[
-                    { title: "Product", items: ["Features", "Pricing", "API", "Changelog"] },
-                    { title: "Company", items: ["About", "Blog", "Careers", "Contact"] },
-                    { title: "Legal", items: ["Privacy", "Terms", "Security"] },
+                    {
+                        title: "Product", items: [
+                            { name: "Features", href: "#features" },
+                            { name: "Pricing", href: "#pricing" },
+                            { name: "API", href: "#" },
+                            { name: "Changelog", href: "#" }
+                        ]
+                    },
+                    {
+                        title: "Company", items: [
+                            { name: "About", href: "#" },
+                            { name: "Blog", href: "#" },
+                            { name: "Careers", href: "#" },
+                            { name: "Contact", href: "#" }
+                        ]
+                    },
+                    {
+                        title: "Legal", items: [
+                            { name: "Privacy", href: "/privacy" },
+                            { name: "Terms", href: "/terms" },
+                            { name: "Security", href: "#" }
+                        ]
+                    },
                 ].map((col) => (
                     <div key={col.title}>
                         <h4 className="font-semibold text-foreground mb-6">{col.title}</h4>
                         <ul className="space-y-4">
                             {col.items.map((item) => (
-                                <li key={item}>
-                                    <a href="#" className="text-muted-foreground hover:text-foreground transition-colors">
-                                        {item}
+                                <li key={item.name}>
+                                    <a href={item.href} className="text-muted-foreground hover:text-foreground transition-colors">
+                                        {item.name}
                                     </a>
                                 </li>
                             ))}

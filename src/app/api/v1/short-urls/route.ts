@@ -3,12 +3,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { AUTH_COOKIE_NAME } from "@/app/constant/auth.constant";
 import { env } from "@/config/env";
 import { asyncHandler, throwBadRequest } from "@/lib/helper/async-handler";
+import { cache } from "@/lib/helper/cache";
 import client from "@/lib/helper/db";
 import { verifyJwt } from "@/lib/helper/jwt";
 import { generateUniqueShortUrl } from "@/lib/helper/short-url";
 import { shortUrlSchema } from "@/lib/helper/validation";
+import { cacheUrlData } from "@/lib/services/url.service";
 
 const isUrlExists = async (url: string) => {
+  if (cache.has(`url:${url}`)) return true;
+
   const count = await client.url.count({
     where: {
       short_url: url,
@@ -69,7 +73,7 @@ export const POST = asyncHandler(async (req: NextRequest) => {
     ensureUnique: async (url: string) => !(await isUrlExists(url)),
   });
 
-  await client.url.create({
+  const newUrl = await client.url.create({
     data: {
       short_url,
       original_url: data.url,
@@ -78,6 +82,15 @@ export const POST = asyncHandler(async (req: NextRequest) => {
       ...(body.expires_at && { expires_at: body.expires_at }),
       ...(!finalUserId && { creator_ip: ip }), // Only store IP for anonymous or if needed (logic below kept consistent with intent)
     },
+  });
+
+  // Cache immediately for fast resolution
+  await cacheUrlData(short_url, {
+    id: newUrl.id,
+    original_url: newUrl.original_url,
+    expires_at: newUrl.expires_at ? newUrl.expires_at.toISOString() : null, // Store string in cache usually or handle in service
+    is_active: newUrl.is_active,
+    user_id: newUrl.user_id
   });
 
   return NextResponse.json({

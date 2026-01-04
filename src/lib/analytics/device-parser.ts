@@ -68,7 +68,7 @@ export async function getLocationFromIP(ip: string): Promise<LocationInfo> {
         }
 
         return {};
-    } catch (error) {
+    } catch {
         // Silently fail - location is optional
         return {};
     }

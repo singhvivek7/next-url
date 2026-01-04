@@ -10,7 +10,7 @@ export function GeneralLoader({
     description = "Please wait while we fetch your data."
 }: GeneralLoaderProps) {
     return (
-        <div className="flex flex-col items-center justify-center p-8 space-y-4 text-center">
+        <div className="flex flex-col items-center justify-center p-8 space-y-4 text-center h-full w-full">
             <div className="relative">
                 <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full animate-pulse" />
                 <Loader2 className="h-10 w-10 animate-spin text-primary relative z-10" />

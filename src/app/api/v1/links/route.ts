@@ -12,11 +12,14 @@ export const GET = asyncHandler(async (req: NextRequest) => {
 
     const decodedToken = getTokenData(req);
 
+    const where: any = {};
+    if (decodedToken.role !== 'SUPER_ADMIN') {
+        where.user_id = decodedToken.user_id;
+    }
+
     const [links, total] = await Promise.all([
         client.url.findMany({
-            where: {
-                user_id: decodedToken.user_id
-            },
+            where,
             skip,
             take: limit,
             orderBy: {
@@ -24,6 +27,7 @@ export const GET = asyncHandler(async (req: NextRequest) => {
             },
             select: {
                 id: true,
+                user_id: true,
                 clicks: true,
                 expires_at: true,
                 is_active: true,
@@ -34,9 +38,7 @@ export const GET = asyncHandler(async (req: NextRequest) => {
             }
         }),
         client.url.count({
-            where: {
-                user_id: decodedToken.user_id
-            }
+            where
         })
     ])
 

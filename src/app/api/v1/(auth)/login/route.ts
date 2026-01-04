@@ -29,6 +29,12 @@ export const POST = asyncHandler(async (req: NextRequest) => {
     where: {
       email: data.email,
     },
+    select: {
+      id: true,
+      password: true,
+      role: true,
+      plan: true,
+    },
   });
 
   if (!user) {
@@ -45,6 +51,8 @@ export const POST = asyncHandler(async (req: NextRequest) => {
   // create token
   const payload: IJwtPayload = {
     user_id: user.id,
+    role: user.role,
+    plan: user.plan,
   };
 
   const token = signJwt(payload);

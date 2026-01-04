@@ -88,8 +88,8 @@ export const UrlShortener = () => {
             toast.error("You have reached the free limit of 3 links.", {
                 description: "Please login to create more links.",
                 action: {
-                    label: "Login",
-                    onClick: () => window.location.href = "/login"
+                    label: "Sign Up",
+                    onClick: () => window.location.href = "/register"
                 }
             });
             return;

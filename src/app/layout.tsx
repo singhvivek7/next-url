@@ -3,7 +3,7 @@ import "./globals.css";
 import { Suspense } from "react";
 
 import { ConfigStyleProvider } from "@/components/config-style-provider";
-import { GeneralLoader } from "@/components/general-loader";
+import { Loader } from "@/components/landing/loader";
 import { Toaster } from "@/components/ui/sonner";
 import { env } from "@/config/env";
 import { siteConfig } from "@/config/site";
@@ -42,7 +42,7 @@ export default ({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <ConfigStyleProvider>
-          <Suspense fallback={<GeneralLoader />}>
+          <Suspense fallback={<Loader />}>
             <QueryProvider>
               {children}
               <Toaster position="bottom-right" richColors />

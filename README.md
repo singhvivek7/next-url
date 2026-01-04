@@ -4,14 +4,29 @@ A modern, high-performance URL shortener built with Next.js 16, Prisma, MongoDB,
 
 ## 🚀 Features
 
--   **URL Shortening**: Create specific short links for your long URLs.
--   **Analytics**: Detailed analytics including clicks, geolocation (country/city), device, browser, and OS tracking.
--   **User Management**: Secure authentication system with Registration and Login.
--   **Dashboard**: Intuitive dashboard to manage your links and view statistics.
--   **Custom Expiry**: Set expiration dates for your short links.
--   **QR Codes**: Generate QR codes for your short links (planned/implicit in modern shorteners).
--   **Responsive Design**: Beautiful UI built with Tailwind CSS and Radix UI.
--   **High Performance**: Powered by Bun and Next.js 16 (Turbopack).
+### 🔗 Core URL Capabilities
+-   **High-Performance Shortening**: Generate unique short links instantly with sub-millisecond creation times.
+-   **Smart Caching**: In-memory **LRU Cache** handling for sub-millisecond link resolution and redirects.
+-   **Custom Expiry**: Set specific expiration dates for links.
+-   **Anonymous Usage**: Create links without login (Limited to 3 links with 3-day expiry).
+-   **Auto Cleanup**: Automated cron jobs to remove expired links.
+
+### 📊 Advanced Analytics
+-   **Real-Time Tracking**: Event-driven architecture (EventEmitter3) ensures non-blocking analytics logging.
+-   **Detailed Metrics**: Track Clicks, Unique Visitors, and Referrer domains.
+-   **Geolocation**: Automatic IP-based Country and City detection.
+-   **Device Insights**: Comprehensive OS, Browser, and Device type tracking.
+
+### 🛡️ Security & Roles
+-   **Role-Based Access Control (RBAC)**: Support for User, Admin, and Super Admin roles.
+-   **Super Admin Dashboard**: Capabilities to view and manage links across all users.
+-   **Secure Auth**: JWT-based authentication with payload encryption.
+-   **Robust Architecture**: Singleton pattern for Database and Cache services ensuring stability in Dev/Prod.
+
+### 🎨 Modern UI/UX
+-   **Responsive Dashboard**: Built with **Radix UI** and **Tailwind CSS**.
+-   **Interactive Tables**: Advanced data tables with sorting and live expiry status.
+-   **Optimized Performance**: Powered by Bun and Next.js 16 (Turbopack).
 
 ## 🛠️ Tech Stack
 

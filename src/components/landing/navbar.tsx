@@ -26,7 +26,7 @@ export const Navbar = () => {
                 <div className="flex items-center gap-8">
                     <div
                         className="flex items-center gap-3 cursor-pointer group"
-                        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                        onClick={() => router.push("/")}
                     >
                         <div className="flex items-center justify-center group-hover:scale-95 transition-transform duration-200">
                             <Logo className="h-8 w-auto" />
@@ -43,8 +43,8 @@ export const Navbar = () => {
                         {navLinks.map((item) => (
                             <a
                                 key={item.name}
-                                href={item.href}
-                                className="text-sm font-medium text-foreground/50 hover:text-foreground transition-colors duration-200"
+                                onClick={() => router.push(item.href)}
+                                className="cursor-pointer text-sm font-medium text-foreground/50 hover:text-foreground transition-colors duration-200"
                             >
                                 {item.name}
                             </a>
@@ -55,20 +55,13 @@ export const Navbar = () => {
                 {/* Right: Actions */}
                 <div className="flex items-center gap-4">
                     <ThemePicker />
-                    {/* <Button
-                        variant="landing-ghost"
-                        onClick={handleLogin}
-                        className="hidden md:flex"
-                    >
-                        Log in
-                    </Button> */}
                     <motion.div
                         whileHover={{ scale: 1.02 }}
                         whileTap={{ scale: 0.98 }}
                         className="hidden sm:block relative group"
                     >
                         {/* Animated gradient border */}
-                        <div className="absolute -inset-[2px] bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_100%] rounded-none animate-gradient-x opacity-75 group-hover:opacity-100 transition-opacity" />
+                        <div className="absolute -inset-[2px] bg-linear-to-r from-primary via-secondary to-primary bg-[length:200%_100%] rounded-none animate-gradient-x opacity-75 group-hover:opacity-100 transition-opacity" />
 
                         {/* Sparkle effects */}
                         <div className="absolute -inset-[2px] rounded-none overflow-hidden">

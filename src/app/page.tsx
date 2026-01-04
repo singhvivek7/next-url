@@ -20,6 +20,7 @@ const NextURLLanding = () => {
   const mouseY = useMotionValue(0);
   const smoothX = useSpring(mouseX, { damping: 50, stiffness: 400 });
   const smoothY = useSpring(mouseY, { damping: 50, stiffness: 400 });
+
   const { mode } = useThemeColor();
 
   useEffect(() => {
@@ -33,35 +34,41 @@ const NextURLLanding = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground overflow-x-hidden">
-      <GridBackground />
-      <Navbar />
-
-      {/* Cursor Glow Effect */}
       <motion.div
-        className="fixed w-[600px] h-[600px] rounded-full pointer-events-none z-0"
-        style={{
-          x: smoothX,
-          y: smoothY,
-          translateX: "-50%",
-          translateY: "-50%",
-          opacity: 0.10,
-          mixBlendMode: mode === "dark" ? "screen" : "multiply",
-          background:
-            "radial-gradient(circle, var(--primary), transparent 70%)",
-        }}
-      />
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="w-full"
+      >
+        <GridBackground />
+        <Navbar />
 
-      <main>
-        <Hero />
-        <Stats />
-        <Features />
-        <Testimonials />
-        <Pricing />
-        <FAQ />
-        <CTA />
-      </main>
+        {/* Cursor Glow Effect */}
+        <motion.div
+          className="fixed w-[600px] h-[600px] rounded-full pointer-events-none z-0"
+          style={{
+            x: smoothX,
+            y: smoothY,
+            translateX: "-50%",
+            translateY: "-50%",
+            opacity: 0.10,
+            mixBlendMode: mode === "dark" ? "screen" : "multiply",
+            background: "radial-gradient(circle, var(--primary), transparent 70%)",
+          }}
+        />
 
-      <Footer />
+        <main>
+          <Hero />
+          <Stats />
+          <Features />
+          <Testimonials />
+          <Pricing />
+          <FAQ />
+          <CTA />
+        </main>
+
+        <Footer />
+      </motion.div>
 
       {/* Global Styles for Custom Animations */}
       <style jsx global>{`

@@ -1,7 +1,7 @@
 export interface ILink {
     id: string
     clicks: any[]
-    expires_at: string
+    expires_at: string | null
     is_active: boolean
     original_url: string
     short_url: string

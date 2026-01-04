@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: next-link-app
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=mongodb://mongo:27017/next-link?authSource=admin
+      - NEXT_PUBLIC_APP_BASE_URL=http://localhost:3000
+      - JWT_SECRET=docker-secret-key-change-me
+      - NEXT_PUBLIC_ENCRYPTION_KEY=docker-encryption-key-change-me
+      - NODE_ENV=production
+    depends_on:
+      - mongo
+    # Ensure database schema is pushed before starting
+    command: /bin/sh -c "bun run db:push && bun start"
+
+  mongo:
+    image: mongo:latest
+    container_name: next-link-mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:

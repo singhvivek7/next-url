@@ -53,6 +53,14 @@ export const columns: ColumnDef<ILink>[] = [
         cell: ({ row }) => <div className="text-center">{row.original.clicks?.length || 0}</div>,
     },
     {
+        accessorKey: "expires_at",
+        header: "Expires At",
+        cell: ({ row }) => {
+            const expiresAt = row.getValue("expires_at") as string
+            return expiresAt ? formateDate(expiresAt) : <span className="text-muted-foreground">-</span>
+        }
+    },
+    {
         accessorKey: "is_active",
         header: "Status",
         cell: ({ row }) => {
