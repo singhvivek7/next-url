@@ -39,12 +39,30 @@ export const POST = asyncHandler(async (req: NextRequest) => {
   data.password = hashedPassword;
   try {
 
+    // Get or create Basic plan
+    let basicPlan = await client.plan.findUnique({
+      where: { type: "BASIC" }
+    });
+
+    if (!basicPlan) {
+      basicPlan = await client.plan.create({
+        data: {
+          type: "BASIC",
+          name: "Basic Plan",
+          price: 0,
+          features: ["Shorten links", "Basic analytics", "10 links limit"],
+          limits: { urls: 10, clicks: 1000 }
+        }
+      });
+    }
+
     // Create user
     const user = await client.user.create({
       data: {
         name: data.name,
         email: data.email,
         password: data.password,
+        plan_id: basicPlan.id,
       },
     });
 

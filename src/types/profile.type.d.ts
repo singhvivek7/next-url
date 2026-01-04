@@ -1,3 +1,5 @@
+import { Plan } from "@/hooks/use-plans"
+
 export interface IProfile {
     id: string
     email: string
@@ -7,6 +9,8 @@ export interface IProfile {
     username: string
     avatar: string
     plan: string
+    plan_id?: string | null
+    plan_details?: Plan | null
     created_at: string
     updated_at: string
 }

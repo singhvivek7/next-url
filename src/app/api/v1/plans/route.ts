@@ -20,7 +20,7 @@ export async function GET() {
                 limits: true
             },
             orderBy: {
-                price: 'asc'
+                created_at: 'asc'
             }
         });
 

@@ -1,6 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
 
-import { asyncHandler } from "@/lib/helper/async-handler";
+import { AUTH_COOKIE_NAME } from "@/app/constant/auth.constant";
+import { asyncHandler, successResponse, throwUnauthorized } from "@/lib/helper/async-handler";
 import client from "@/lib/helper/db";
 import { getTokenData } from "@/lib/helper/jwt";
 
@@ -18,9 +20,15 @@ export const GET = asyncHandler(async (request: NextRequest) => {
             username: true,
             avatar: true,
             plan: true,
+            plan_id: true,
+            plan_details: true,
             created_at: true,
             updated_at: true,
         }
     })
-    return NextResponse.json({ message: "success", data: user }, { status: 200 })
+    if (!user) {
+        (await cookies()).delete(AUTH_COOKIE_NAME);
+        throwUnauthorized();
+    }
+    return successResponse(user, "User profile fetched successfully");
 })

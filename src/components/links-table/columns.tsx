@@ -5,10 +5,8 @@ import { ArrowUpDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { env } from "@/config/env"
-import { formateDate } from "@/lib/helper/date"
+import { formatDate } from "@/lib/helper/date"
 import { ILink } from "@/types/links.types"
-
-import { LinkActions } from "./link-actions"
 
 export const columns: ColumnDef<ILink>[] = [
     {
@@ -50,14 +48,14 @@ export const columns: ColumnDef<ILink>[] = [
                 </Button>
             )
         },
-        cell: ({ row }) => <div className="text-center">{row.original.clicks?.length || 0}</div>,
+        cell: ({ row }) => <div className="text-center">{row.original._count.clicks || 0}</div>,
     },
     {
         accessorKey: "expires_at",
         header: "Expires At",
         cell: ({ row }) => {
             const expiresAt = row.getValue("expires_at") as string
-            return expiresAt ? formateDate(expiresAt) : <span className="text-muted-foreground">-</span>
+            return expiresAt ? formatDate(expiresAt) : <span className="text-muted-foreground">-</span>
         }
     },
     {
@@ -75,10 +73,7 @@ export const columns: ColumnDef<ILink>[] = [
     {
         accessorKey: "created_at",
         header: "Created At",
-        cell: ({ row }) => formateDate(row.getValue("created_at"))
+        cell: ({ row }) => formatDate(row.getValue("created_at"))
     },
-    {
-        id: "actions",
-        cell: ({ row }) => <LinkActions link={row.original} />,
-    },
+
 ]

@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
-import { asyncHandler } from "@/lib/helper/async-handler";
+import { asyncHandler, successResponse } from "@/lib/helper/async-handler";
 import client from "@/lib/helper/db";
 import { getTokenData } from "@/lib/helper/jwt";
 
@@ -28,7 +28,9 @@ export const GET = asyncHandler(async (req: NextRequest) => {
             select: {
                 id: true,
                 user_id: true,
-                clicks: true,
+                _count: {
+                    select: { clicks: true }
+                },
                 expires_at: true,
                 is_active: true,
                 original_url: true,
@@ -42,14 +44,15 @@ export const GET = asyncHandler(async (req: NextRequest) => {
         })
     ])
 
-    return NextResponse.json({
-        message: 'success',
-        data: links,
-        meta: {
+    return successResponse(
+        links,
+        "Links fetched successfully",
+        200,
+        {
             total,
             page,
             limit,
             totalPages: Math.ceil(total / limit)
         }
-    });
+    );
 });

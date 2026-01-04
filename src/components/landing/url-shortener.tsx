@@ -224,7 +224,7 @@ export const UrlShortener = () => {
                                     </button>
                                     <button
                                         onClick={(e) => deleteFromHistory(item.id, e)}
-                                        className="cursor-pointer p-2 border border-border hover:border-red-500/30 text-muted-foreground hover:text-destructive transition-colors"
+                                        className="cursor-pointer p-2 border border-border hover:border-primary/30 text-muted-foreground hover:text-primary transition-colors"
                                         title="Delete"
                                     >
                                         <Trash2 className="w-3.5 h-3.5" />
