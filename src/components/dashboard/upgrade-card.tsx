@@ -10,7 +10,7 @@ export const UpgradeCard = () => {
     const { data } = useProfile();
     const [open, setOpen] = useState(false);
 
-    if (data?.data.plan !== "BASIC") return null;
+    if (data?.data?.plan !== "BASIC") return null;
 
     return (
         <>
@@ -35,6 +35,7 @@ export const UpgradeCard = () => {
             <UpgradeDialog
                 open={open}
                 onOpenChange={setOpen}
+                currentPlan={data?.data?.plan}
                 user={{
                     name: data?.data.name,
                     email: data?.data.email

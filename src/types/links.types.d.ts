@@ -1,6 +1,16 @@
 export interface ILink {
     id: string
-    clicks: any[]
+    title: string
+    description: string
+    _count: { clicks: number }
+    click: any[]
+    graph?: {
+        date: string
+        count: number
+    }[]
+    locations?: { _id: string, count: number }[]
+    devices?: { _id: string, count: number }[]
+    os?: { _id: string, count: number }[]
     expires_at: string | null
     is_active: boolean
     original_url: string

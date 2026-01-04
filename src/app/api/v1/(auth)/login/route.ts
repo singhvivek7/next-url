@@ -38,14 +38,14 @@ export const POST = asyncHandler(async (req: NextRequest) => {
   });
 
   if (!user) {
-    return throwBadRequest("Email or password is incorrect");
+    throw throwBadRequest("Email or password is incorrect");
   }
 
   // Hash password
   const isMatched = await compare(data.password, user.password);
 
   if (!isMatched) {
-    return throwBadRequest("Email or password is incorrect");
+    throw throwBadRequest("Email or password is incorrect");
   }
 
   // create token

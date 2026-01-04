@@ -44,7 +44,7 @@ export function DashboardSidebar({ isOpen, onClose, collapsed = false, onToggleC
   }
 
   const renderNavigationItem = (item: NavItem, depth = 0) => {
-    const isActive = pathname === item.href
+    const isActive = pathname === item.href || (item.href !== "/" && pathname?.startsWith(`${item.href}/`))
     const isExpanded = expandedItems.includes(item.name)
     const hasChildren = item.children && item.children.length > 0
 
@@ -145,7 +145,7 @@ export function DashboardSidebar({ isOpen, onClose, collapsed = false, onToggleC
                     className={cn(
                       "group flex items-center rounded-none text-sm font-medium transition-all",
                       collapsed ? "justify-center py-3" : "gap-x-3 px-3 py-2.5",
-                      pathname === item.href
+                      pathname === item.href || (item.href !== "/" && pathname?.startsWith(`${item.href}/`))
                         ? "bg-primary text-primary-foreground"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground"
                     )}

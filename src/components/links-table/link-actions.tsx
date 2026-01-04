@@ -24,7 +24,7 @@ import { env } from "@/config/env"
 import { useDeleteLink } from "@/hooks/use-delete-link"
 import { useLinkById } from "@/hooks/use-link-by-id"
 import { useUpdateLink } from "@/hooks/use-update-link"
-import { formateDate } from "@/lib/helper/date"
+import { formatDate } from "@/lib/helper/date"
 import { ILink } from "@/types/links.types"
 import { copyToClipboard } from "@/utils/helper"
 
@@ -41,7 +41,7 @@ export function LinkActions({ link }: LinkActionsProps) {
     const updateLink = useUpdateLink()
 
     // Only fetch when dialog is open to avoid excessive API calls
-    const { data: linkDetails } = useLinkById(link.id, { enabled: isDetailsOpen })
+    const { data: linkDetails } = useLinkById(link.id, {}, { enabled: isDetailsOpen })
 
     // We can use the props link as initial data or fallback
     const displayLink = linkDetails?.data || link
@@ -132,20 +132,20 @@ export function LinkActions({ link }: LinkActionsProps) {
                         <div className="grid grid-cols-4 items-center gap-4">
                             <span className="font-medium text-right text-sm text-muted-foreground">Clicks:</span>
                             <div className="col-span-3 text-sm">
-                                {displayLink.clicks?.length || 0}
+                                {displayLink?._count?.clicks || 0}
                             </div>
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <span className="font-medium text-right text-sm text-muted-foreground">Created:</span>
                             <div className="col-span-3 text-sm">
-                                {formateDate(displayLink.created_at)}
+                                {formatDate(displayLink.created_at)}
                             </div>
                         </div>
                         {displayLink.expires_at && (
                             <div className="grid grid-cols-4 items-center gap-4">
                                 <span className="font-medium text-right text-sm text-muted-foreground">Expires:</span>
                                 <div className="col-span-3 text-sm">
-                                    {formateDate(displayLink.expires_at)}
+                                    {formatDate(displayLink.expires_at)}
                                 </div>
                             </div>
                         )}
@@ -166,7 +166,7 @@ export function LinkActions({ link }: LinkActionsProps) {
                             Cancel
                         </Button>
                         <Button
-                            variant="destructive"
+                            variant="default"
                             onClick={() => {
                                 deleteLink.mutate(link.id)
                                 setIsDeleteOpen(false)

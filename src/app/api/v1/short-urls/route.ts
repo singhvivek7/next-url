@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { AUTH_COOKIE_NAME } from "@/app/constant/auth.constant";
-import { env } from "@/config/env";
 import { asyncHandler, throwBadRequest } from "@/lib/helper/async-handler";
 import { cache } from "@/lib/helper/cache";
 import client from "@/lib/helper/db";
-import { verifyJwt } from "@/lib/helper/jwt";
+import { getTokenData } from "@/lib/helper/jwt";
 import { generateUniqueShortUrl } from "@/lib/helper/short-url";
 import { shortUrlSchema } from "@/lib/helper/validation";
 import { cacheUrlData } from "@/lib/services/url.service";
@@ -22,14 +20,13 @@ const isUrlExists = async (url: string) => {
   return count > 0;
 };
 
-import { decryptData } from "@/lib/helper/storage";
+import { IJwtPayload } from "@/app/types/auth.type";
 import { checkUrlLimit } from "@/lib/middleware/usage-limit";
 
 export const POST = asyncHandler(async (req: NextRequest) => {
   const body = await req.json();
   const { success, data } = shortUrlSchema.safeParse(body);
 
-  const encryptedToken = req.cookies.get(AUTH_COOKIE_NAME)?.value;
   let ip = req.headers.get("x-forwarded-for") || "127.0.0.1";
 
   // Handle multiple IPs in x-forwarded-for (e.g. "client, proxy1, proxy2")
@@ -38,12 +35,33 @@ export const POST = asyncHandler(async (req: NextRequest) => {
   }
 
   let finalUserId: string | undefined;
-  const token = encryptedToken ? decryptData(encryptedToken, env.JWT_SECRET as string) : null;
+  let userPlan: string | undefined;
 
-  if (token) {
-    const { user_id } = verifyJwt(token);
-    finalUserId = user_id;
-    await checkUrlLimit(user_id);
+  // Try to get token data, but don't fail if user is not authenticated
+  let tokenData: IJwtPayload | null;
+  try {
+    tokenData = getTokenData(req);
+  } catch {
+    // User is not authenticated, will be treated as anonymous
+    tokenData = null;
+  }
+
+  if (tokenData) {
+    finalUserId = tokenData.user_id;
+    await checkUrlLimit(tokenData.user_id);
+
+    // // Fetch user's plan to determine expiry
+    // const user = await client.user.findUnique({
+    //   where: { id: tokenData.user_id },
+    //   select: { plan: true }
+    // });
+
+    userPlan = tokenData?.plan;
+
+    // Set 30-day expiry for BASIC plan users
+    if (userPlan === "BASIC") {
+      body.expires_at = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    }
   } else {
     // IP-based limit check for anonymous users
     const anonymousCount = await client.url.count({

@@ -15,6 +15,6 @@ export const GridBackground = () => (
                     "radial-gradient(ellipse 60% 50% at 50% -20%, hsl(var(--primary) / 0.15), transparent)",
             }}
         />
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-background via-transparent to-background" />
+        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-background via-transparent to-background opacity-5" />
     </div>
 );

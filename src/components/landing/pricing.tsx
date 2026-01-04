@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { GeneralLoader } from "@/components/general-loader";
 import { Button } from "@/components/ui/button";
 import { usePlans } from "@/hooks/use-plans";
+import { formatPrice } from "@/lib/helper/date";
 
 export const Pricing = () => {
     const { data: plans, isLoading, error } = usePlans();
@@ -71,14 +72,9 @@ export const Pricing = () => {
 
                                 <h3 className="text-lg font-semibold text-foreground mb-2">{plan.name}</h3>
                                 <div className="text-3xl font-bold text-foreground mb-6">
-                                    {isCustom ? (
-                                        "Custom"
-                                    ) : (
-                                        <>
-                                            ₹{plan.price}
-                                            <span className="text-sm font-normal text-muted-foreground">/mo</span>
-                                        </>
-                                    )}
+                                    {formatPrice(plan.price)}
+                                    <span className="text-sm font-normal text-muted-foreground">/mo</span>
+
                                 </div>
                                 <p className="text-sm text-muted-foreground mb-8 border-b border-border pb-8">
                                     {plan.description}

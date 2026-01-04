@@ -18,27 +18,35 @@ import {
 } from "@/components/ui/dialog";
 import { env } from "@/config/env";
 import { usePlans } from "@/hooks/use-plans";
+import { useProfile } from "@/hooks/use-profile";
 import { UPGRADE_GRADIENT_STYLES } from "@/lib/constant/ui.constant";
+import { formatPrice } from "@/lib/helper/date";
 import { hslToHex } from "@/utils/color";
 
 interface UpgradeDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    currentPlan?: string; // User's current plan type
     user?: {
         name?: string;
         email?: string;
     };
 }
 
-export function UpgradeDialog({ open, onOpenChange, user }: UpgradeDialogProps) {
+export function UpgradeDialog({ open, onOpenChange }: UpgradeDialogProps) {
     const [loading, setLoading] = useState(false);
+    const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
     const { data: plans, isLoading: plansLoading } = usePlans();
+    const { data: user } = useProfile();
     const { palette } = useThemeColor();
 
-    // Get Pro Plan from database
-    const proPlan = plans?.find(p => p.type === "PRO");
-    const PRO_PLAN_AMOUNT = proPlan?.price || 499; // Fallback to 499
-    const CURRENCY = proPlan?.currency || "INR";
+    // Filter out current plan and get available plans
+    const availablePlans = plans?.filter(p => p.type !== user?.data.plan_details?.type) || [];
+
+    // Auto-select first available plan
+    const activePlan = selectedPlan
+        ? availablePlans.find(p => p.id === selectedPlan)
+        : availablePlans[0];
 
     // Get theme color in hex format for Razorpay
     const themeColor = hslToHex(palette.cssVars.primary);
@@ -58,6 +66,19 @@ export function UpgradeDialog({ open, onOpenChange, user }: UpgradeDialogProps) 
     };
 
     const handlePayment = async () => {
+        if (!activePlan) {
+            toast.error("Please select a plan");
+            return;
+        }
+
+        // For Enterprise/Custom plans, show contact message
+        if (activePlan.type === "CUSTOM") {
+            toast.info("Enterprise Plan", {
+                description: "Please contact our sales team for custom pricing and enterprise features."
+            });
+            return;
+        }
+
         setLoading(true);
 
         // 1. Load Script
@@ -73,7 +94,11 @@ export function UpgradeDialog({ open, onOpenChange, user }: UpgradeDialogProps) 
             const orderRes = await fetch("/api/v1/payment/order", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ amount: PRO_PLAN_AMOUNT, currency: CURRENCY }),
+                body: JSON.stringify({
+                    amount: activePlan.price,
+                    currency: activePlan.currency,
+                    plan_type: activePlan.type
+                }),
             });
 
             if (!orderRes.ok) throw new Error("Failed to create order");
@@ -82,12 +107,12 @@ export function UpgradeDialog({ open, onOpenChange, user }: UpgradeDialogProps) 
 
             // 3. Open Razorpay Options
             const options = {
-                key: env.NEXT_PUBLIC_RAZORPAY_KEY_ID, // Use env var
+                key: env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
                 amount: orderData.amount,
                 currency: orderData.currency,
-                name: "NextLink Pro",
-                description: "Upgrade to Pro Plan",
-                image: "/logo/light.svg", // Optional logo
+                name: `NextLink ${activePlan.name}`,
+                description: `Upgrade to ${activePlan.name}`,
+                image: "/logo/light.svg",
                 order_id: orderData.id,
                 handler: async function (response: any) {
                     // 4. Verify Payment
@@ -104,10 +129,9 @@ export function UpgradeDialog({ open, onOpenChange, user }: UpgradeDialogProps) 
 
                         if (verifyRes.ok) {
                             toast.success("Upgrade Successful!", {
-                                description: "You are now on the Pro plan."
+                                description: `You are now on the ${activePlan.name}.`
                             });
                             onOpenChange(false);
-                            // Ideally refresh user profile here or redirect
                             window.location.reload();
                         } else {
                             toast.error("Payment verification failed");
@@ -118,8 +142,8 @@ export function UpgradeDialog({ open, onOpenChange, user }: UpgradeDialogProps) 
                     }
                 },
                 prefill: {
-                    name: user?.name || "",
-                    email: user?.email || "",
+                    name: user?.data?.name || "",
+                    email: user?.data?.email || "",
                     contact: ""
                 },
                 theme: {
@@ -140,45 +164,65 @@ export function UpgradeDialog({ open, onOpenChange, user }: UpgradeDialogProps) 
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[600px]">
                 <DialogHeader>
-                    <DialogTitle>Upgrade to Pro</DialogTitle>
+                    <DialogTitle>Upgrade Your Plan</DialogTitle>
                     <DialogDescription>
-                        Unlock the full potential of NextLink with our Pro plan.
+                        Choose a plan that fits your needs
                     </DialogDescription>
                 </DialogHeader>
 
-                <div className="py-4">
-                    {plansLoading ? (
-                        <GeneralLoader title="Loading Plan Details" description="Please wait..." />
-                    ) : (
-                        <>
-                            <div className="flex items-baseline justify-center mb-6">
-                                <span className="text-3xl font-bold">₹{PRO_PLAN_AMOUNT}</span>
-                                <span className="text-muted-foreground ml-1">/month</span>
-                            </div>
+                <div className="py-4 max-h-[60vh] overflow-y-auto">{plansLoading ? (
+                    <GeneralLoader title="Loading Plans" description="Please wait..." />
+                ) : availablePlans.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                        No upgrade options available
+                    </div>
+                ) : (
+                    <div className="space-y-4">
+                        {availablePlans.map((plan) => (
+                            <div
+                                key={plan.id}
+                                onClick={() => setSelectedPlan(plan.id)}
+                                className={`border rounded-none p-4 cursor-pointer transition-all ${(selectedPlan === plan.id || (!selectedPlan && plan.id === availablePlans[0]?.id))
+                                    ? 'border-primary bg-primary/5'
+                                    : 'border-border hover:border-primary/50'
+                                    }`}
+                            >
+                                <div className="flex items-start justify-between mb-3">
+                                    <div>
+                                        <h3 className="font-semibold text-lg">{plan.name}</h3>
+                                        {plan.description && (
+                                            <p className="text-sm text-muted-foreground">{plan.description}</p>
+                                        )}
+                                    </div>
+                                    <div className="text-right">
+                                        <div className="text-2xl font-bold">
+                                            {formatPrice(plan.price)}
+                                        </div>
+                                        <div className="text-xs text-muted-foreground">/month</div>
+                                    </div>
+                                </div>
 
-                            <ul className="space-y-3">
-                                {proPlan?.features.map((feature) => (
-                                    <li key={feature} className="flex items-center gap-2">
-                                        <Check className="h-4 w-4 text-green-500" />
-                                        <span className="text-sm">{feature}</span>
-                                    </li>
-                                )) || [
-                                    "Unlimited Short Links",
-                                    "Advanced Analytics",
-                                    "Custom Domains",
-                                    "Priority Support",
-                                    "Ad-free Experience"
-                                ].map((feature) => (
-                                    <li key={feature} className="flex items-center gap-2">
-                                        <Check className="h-4 w-4 text-green-500" />
-                                        <span className="text-sm">{feature}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </>
-                    )}
+                                <ul className="space-y-2">
+                                    {plan.features.map((feature) => (
+                                        <li key={feature} className="flex items-center gap-2 text-sm">
+                                            <Check className="h-4 w-4 text-primary flex-shrink-0" />
+                                            <span>{feature}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+
+                                {plan.limits && (
+                                    <div className="mt-3 pt-3 border-t border-border/50 flex gap-4 text-xs text-muted-foreground">
+                                        <span>URLs: {plan.limits.urls === -1 ? <span className="font-semibold text-primary">Unlimited</span> : plan.limits.urls}</span>
+                                        <span>Clicks: {plan.limits.clicks === -1 ? <span className="font-semibold text-primary">Unlimited</span> : plan.limits.clicks}</span>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                )}
                 </div>
 
                 <DialogFooter>
@@ -187,10 +231,15 @@ export function UpgradeDialog({ open, onOpenChange, user }: UpgradeDialogProps) 
                     </Button>
                     <Button
                         onClick={handlePayment}
-                        disabled={loading}
+                        disabled={loading || !activePlan}
                         className={`${UPGRADE_GRADIENT_STYLES} border-0 hover:opacity-90`}
                     >
-                        {loading ? "Processing..." : "Pay Now"}
+                        {loading
+                            ? "Processing..."
+                            : activePlan?.type === "CUSTOM"
+                                ? "Contact Sales"
+                                : `Upgrade to ${activePlan?.name || 'Plan'}`
+                        }
                     </Button>
                 </DialogFooter>
             </DialogContent>

@@ -22,20 +22,18 @@ export class ApiError extends Error {
 // Custom Success response
 export const successResponse = (
   data: any,
-  message?: string,
-  status?: number,
-  res?: NextResponse
+  message: string = "Success",
+  status: number = 200,
+  meta?: any
 ) => {
-  if (res) {
-    return res;
-  }
   return NextResponse.json(
     {
       status: "success",
       message,
       data,
+      meta,
     },
-    { status: status || 200 }
+    { status }
   );
 };
 
@@ -112,7 +110,7 @@ export const asyncHandler = (fn: AsyncRouteHandler) => {
           status: "error",
           message: error.message || error.description || "Internal server error",
         },
-        { status: 500 }
+        { status: error.status || 500 }
       );
     }
   };

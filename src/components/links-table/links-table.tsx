@@ -1,6 +1,7 @@
 "use client"
 
 import { Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 import { useLinks } from "@/hooks/use-links"
@@ -9,6 +10,7 @@ import { columns } from "./columns"
 import { DataTable } from "./data-table"
 
 export function LinksTable() {
+    const router = useRouter()
     const [page, setPage] = useState(1)
     const limit = 10
 
@@ -38,6 +40,7 @@ export function LinksTable() {
                 pageIndex={meta.page}
                 pageSize={meta.limit}
                 onPageChange={setPage}
+                onRowClick={(row) => router.push(`/links/${row.id}`)}
             />
         </div>
     )

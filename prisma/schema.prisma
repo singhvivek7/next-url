@@ -32,15 +32,19 @@ model User {
   name       String
   role       Role     @default(USER)
   plan       PlanType @default(BASIC)
-  username   String  @unique @default(cuid()) // random string 8 char
+  username   String   @unique @default(cuid()) // random string 8 char
   avatar     String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
   // Relations
-  urls Url[]
-  transactions Transaction[]
+  urls            Url[]
+  transactions    Transaction[]
   plan_expires_at DateTime?
+
+  // Plan Relation
+  plan_id      String? @db.ObjectId
+  plan_details Plan?   @relation(fields: [plan_id], references: [id])
 
   @@map("users")
 }
@@ -52,22 +56,22 @@ enum PaymentStatus {
 }
 
 model Transaction {
-  id            String        @id @default(auto()) @map("_id") @db.ObjectId
-  amount        Float
-  currency      String        @default("INR")
-  status        PaymentStatus @default(PENDING)
-  payment_id    String?
-  order_id      String
-  signature     String?
-  created_at    DateTime      @default(now())
-  updated_at    DateTime      @updatedAt
+  id         String        @id @default(auto()) @map("_id") @db.ObjectId
+  amount     Float
+  currency   String        @default("INR")
+  status     PaymentStatus @default(PENDING)
+  payment_id String?
+  order_id   String
+  signature  String?
+  created_at DateTime      @default(now())
+  updated_at DateTime      @updatedAt
 
   // User relation
-  user_id       String        @db.ObjectId
-  user          User          @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id String @db.ObjectId
+  user    User   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   // Plan details snapshot
-  plan_type     PlanType
+  plan_type PlanType
 
   @@index([user_id])
   @@index([order_id])
@@ -87,9 +91,9 @@ model Url {
   updated_at   DateTime  @updatedAt
 
   // User relation (optional - for anonymous URLs)
-  user_id    String?   @db.ObjectId
-  creator_ip String?   // For anonymous rate limiting
-  user       User?     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user_id    String? @db.ObjectId
+  creator_ip String? // For anonymous rate limiting
+  user       User?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   // Relations
   clicks Click[]
@@ -97,7 +101,7 @@ model Url {
   // Indexes for better performance
   @@index([user_id])
   @@index([created_at])
-  @@index([is_active])  // Index for filtering active URLs
+  @@index([is_active]) // Index for filtering active URLs
   @@index([expires_at]) // Index for cleanup queries
   @@map("urls")
 }
@@ -121,9 +125,9 @@ model Click {
   device     String?
   browser    String?
   os         String?
-  
+
   // Relation to advanced metadata
-  metadata   ClickMetadata?
+  metadata ClickMetadata?
 
   // Indexes for analytics queries
   @@index([url_id])
@@ -136,9 +140,9 @@ model Click {
 }
 
 model ClickMetadata {
-  id             String  @id @default(auto()) @map("_id") @db.ObjectId
-  click_id       String  @unique @db.ObjectId
-  click          Click   @relation(fields: [click_id], references: [id], onDelete: Cascade)
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  click_id String @unique @db.ObjectId
+  click    Click  @relation(fields: [click_id], references: [id], onDelete: Cascade)
 
   // Advanced monitoring data
   language       String?
@@ -147,10 +151,9 @@ model ClickMetadata {
   asn            String?
   referer_domain String?
   is_bot         Boolean @default(false)
-  
+
   @@map("click_metadata")
 }
-
 
 model Analytics {
   id     String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -182,6 +185,9 @@ model Plan {
   is_active   Boolean  @default(true)
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
+
+  // Relation
+  users User[]
 
   @@map("plans")
 }
