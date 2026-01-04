@@ -22,6 +22,7 @@ export default async function GetUrlPage({
       const ip = headersList.get("x-forwarded-for") || headersList.get("cf-connecting-ip") || "unknown";
       const userAgent = headersList.get("user-agent") || "unknown";
       const referer = headersList.get("referer") || "unknown";
+      const language = headersList.get("accept-language")?.split(',')[0] || undefined;
 
       // Track click (fire-and-forget, won't block redirect)
       trackClick({
@@ -30,6 +31,7 @@ export default async function GetUrlPage({
         ip,
         userAgent,
         referer,
+        language,
       });
 
     } catch (err: any) {

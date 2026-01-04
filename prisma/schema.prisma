@@ -116,16 +116,41 @@ model Click {
   referer    String?
   country    String?
   city       String?
+  region     String?
+  timezone   String?
   device     String?
   browser    String?
   os         String?
+  
+  // Relation to advanced metadata
+  metadata   ClickMetadata?
 
   // Indexes for analytics queries
   @@index([url_id])
   @@index([created_at])
   @@index([country])
+  @@index([browser])
+  @@index([os])
+  @@index([device])
   @@map("clicks")
 }
+
+model ClickMetadata {
+  id             String  @id @default(auto()) @map("_id") @db.ObjectId
+  click_id       String  @unique @db.ObjectId
+  click          Click   @relation(fields: [click_id], references: [id], onDelete: Cascade)
+
+  // Advanced monitoring data
+  language       String?
+  isp            String?
+  org            String?
+  asn            String?
+  referer_domain String?
+  is_bot         Boolean @default(false)
+  
+  @@map("click_metadata")
+}
+
 
 model Analytics {
   id     String   @id @default(auto()) @map("_id") @db.ObjectId

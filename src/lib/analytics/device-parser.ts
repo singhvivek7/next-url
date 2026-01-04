@@ -12,6 +12,9 @@ export interface LocationInfo {
     city?: string;
     region?: string;
     timezone?: string;
+    isp?: string;
+    org?: string;
+    asn?: string;
 }
 
 /**
@@ -41,7 +44,8 @@ export async function getLocationFromIP(ip: string): Promise<LocationInfo> {
 
     try {
         // Using ip-api.com (free, no API key needed)
-        const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,city,regionName,timezone`, {
+        // Fields: status, country, city, regionName, timezone, isp, org, as
+        const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,city,regionName,timezone,isp,org,as`, {
             signal: AbortSignal.timeout(2000), // 2 second timeout
         });
 
@@ -57,6 +61,9 @@ export async function getLocationFromIP(ip: string): Promise<LocationInfo> {
                 city: data.city,
                 region: data.regionName,
                 timezone: data.timezone,
+                isp: data.isp,
+                org: data.org,
+                asn: data.as,
             };
         }
 

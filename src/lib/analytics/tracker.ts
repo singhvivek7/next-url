@@ -29,8 +29,19 @@ export async function trackClick(payload: TrackClickPayload): Promise<void> {
                 return;
             }
 
+            // Extract referer domain
+            let refererDomain = undefined;
+            if (payload.referer) {
+                try {
+                    const url = new URL(payload.referer);
+                    refererDomain = url.hostname;
+                } catch {
+                    // Ignore invalid URLs
+                }
+            }
+
             // Parse device info and get location (if available)
-            let deviceInfo = {};
+            let deviceInfo: any = {};
             if (payload.userAgent) {
                 const { parseUserAgent, getLocationFromIP } = await import('./device-parser');
                 const parsed = parseUserAgent(payload.userAgent);
@@ -61,7 +72,26 @@ export async function trackClick(payload: TrackClickPayload): Promise<void> {
                     ip_address: payload.ip,
                     user_agent: payload.userAgent,
                     referer: payload.referer,
-                    ...deviceInfo,
+                    // Basic fields
+                    country: deviceInfo.country,
+                    city: deviceInfo.city,
+                    region: deviceInfo.region,
+                    timezone: deviceInfo.timezone,
+                    device: deviceInfo.device,
+                    browser: deviceInfo.browser,
+                    os: deviceInfo.os,
+
+                    // Advanced metadata in separate collection
+                    metadata: {
+                        create: {
+                            referer_domain: refererDomain,
+                            language: payload.language,
+                            is_bot: payload.userAgent?.toLowerCase().includes('bot') || payload.userAgent?.toLowerCase().includes('crawler') || false,
+                            isp: deviceInfo.isp,
+                            org: deviceInfo.org,
+                            asn: deviceInfo.asn,
+                        }
+                    }
                 }
             });
 
