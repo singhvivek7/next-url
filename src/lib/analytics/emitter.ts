@@ -6,4 +6,7 @@ const globalForAnalytics = global as unknown as { analyticsEmitter: AnalyticsEmi
 
 export const analyticsEmitter = globalForAnalytics.analyticsEmitter || new AnalyticsEmitter();
 
-if (process.env.NODE_ENV !== "production") globalForAnalytics.analyticsEmitter = analyticsEmitter;
+// Store singleton in global for both dev and production to prevent multiple instances
+if (!globalForAnalytics.analyticsEmitter) {
+    globalForAnalytics.analyticsEmitter = analyticsEmitter;
+}
